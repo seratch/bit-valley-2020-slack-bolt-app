@@ -1,0 +1,109 @@
+{
+  "type": "modal",
+  "callback_id": "helpdesk-request-modal",
+  "private_metadata": "{\"category\":\"mobile\"}",
+  "title": {
+    "type": "plain_text",
+    "text": "ヘルプデスク申請"
+  },
+  "submit": {
+    "type": "plain_text",
+    "text": "送信"
+  },
+  "close": {
+    "type": "plain_text",
+    "text": "閉じる"
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "モバイル端末に関する申請画面です。"
+      },
+      "accessory": {
+        "type": "button",
+        "action_id": "helpdesk-request-modal-reset",
+        "text": {
+          "type": "plain_text",
+          "text": "カテゴリ選択に戻る"
+        },
+        "value": "1"
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "title",
+      "label": {
+        "type": "plain_text",
+        "text": "件名"
+      },
+      "element": {
+        "type": "plain_text_input",
+        "action_id": "element",
+        "initial_value": "モバイル端末の交換申請"
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "os",
+      "label": {
+        "type": "plain_text",
+        "text": "モバイル端末の OS"
+      },
+      "element": {
+        "type": "static_select",
+        "action_id": "element",
+        "placeholder": {
+          "type": "plain_text",
+          "text": "選択してください"
+        },
+        "options": [
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "iOS"
+            },
+            "value": "ios"
+          },
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "Android"
+            },
+            "value": "android"
+          }
+        ]
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "approver",
+      "label": {
+        "type": "plain_text",
+        "text": "承認者"
+      },
+      "element": {
+        "type": "users_select",
+        "action_id": "element",
+        "placeholder": {
+          "type": "plain_text",
+          "text": "承認者を選択してください（通常は直属の上司です）"
+        }
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "due-date",
+      "element": {
+        "type": "datepicker",
+        "action_id": "element"
+      },
+      "label": {
+        "type": "plain_text",
+        "text": "希望納品日（ご要望に添えない場合があります）",
+        "emoji": true
+      }
+    }
+  ]
+}

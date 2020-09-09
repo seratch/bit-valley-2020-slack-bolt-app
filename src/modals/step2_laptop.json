@@ -1,0 +1,83 @@
+{
+  "type": "modal",
+  "callback_id": "helpdesk-request-modal",
+  "private_metadata": "{\"category\":\"laptop\"}",
+  "title": {
+    "type": "plain_text",
+    "text": "ヘルプデスク申請"
+  },
+  "submit": {
+    "type": "plain_text",
+    "text": "送信"
+  },
+  "close": {
+    "type": "plain_text",
+    "text": "閉じる"
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "PC に関する申請画面です。"
+      },
+      "accessory": {
+        "type": "button",
+        "action_id": "helpdesk-request-modal-reset",
+        "text": {
+          "type": "plain_text",
+          "text": "カテゴリ選択に戻る"
+        },
+        "value": "1"
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "title",
+      "label": {
+        "type": "plain_text",
+        "text": "件名"
+      },
+      "element": {
+        "type": "plain_text_input",
+        "action_id": "element",
+        "initial_value": "PC の交換申請"
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "laptop-model",
+      "label": {
+        "type": "plain_text",
+        "text": "PC モデル"
+      },
+      "element": {
+        "type": "static_select",
+        "action_id": "element",
+        "options": [
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "MacBook Pro (16-inch, 2019)"
+            },
+            "value": "MacBookPro16,1"
+          },
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "MacBook Pro (13-inch, 2019, Two Thunderbolt 3 ports)"
+            },
+            "value": "MacBookPro15,4"
+          },
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "Surface Book 3 for Business"
+            },
+            "value": "SurfaceBook3"
+          }
+        ]
+      }
+    }
+  ]
+}

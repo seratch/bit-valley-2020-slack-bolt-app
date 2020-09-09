@@ -1,0 +1,38 @@
+{
+  "name": "bit-valley-2020-slack-bolt-app",
+  "version": "0.0.1",
+  "description": "これは BIT VALLEY 2020 でのプレゼンテーション用のデモアプリです。インタラクティブな機能を使ったサンプルとして是非参考にしてみてください！",
+  "main": "index.js",
+  "scripts": {
+    "local": "node_modules/.bin/nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "src/modals/*",
+      "src/initial.js",
+      "src/solution.js"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:seratch/bit-valley-2020-slack-bolt-app.git"
+  },
+  "keywords": [
+    "Slack",
+    "Bolt"
+  ],
+  "author": "@seratch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/seratch/bit-valley-2020-slack-bolt-app/issues"
+  },
+  "homepage": "https://github.com/seratch/bit-valley-2020-slack-bolt-app#readme",
+  "dependencies": {
+    "@slack/bolt": "^2.3.0",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
