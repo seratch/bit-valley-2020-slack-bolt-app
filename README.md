@@ -1,180 +1,199 @@
-# Welcome to Slack App Development!
+# Slack アプリ開発へようこそ！
 
-This repository is the workshop material for [Apidays live Singapore](https://www.apidays.co/singapore/). If you're not an attendee of the workshop, don't worry! You can try this sample project just by reading this.
+このリポジトリは [BIT VALLEY 2020](https://2020.bit-valley.jp/session/298) のための用意されたデモアプリです。ショートカット、モーダルのようなインタラクティブな機能を [Bolt for JavaScript](https://slack.dev/bolt-js/ja-jp/tutorial/getting-started) を使ってどのように実装すればよいかを学ぶためのサンプルとしてもご活用ください。
 
-## Go to **git.io/apidays-slack**
+## このプロジェクトで実装してているアプリ
 
-This project template is available at **git.io/apidays-slack** (https://github.com/seratch/apidays-workshop-2020). Use the shortened URL for sharing this material with others!
+このプロジェクトは、ヘルプデスクチームが提供するアプリを想定したサンプルアプリケーションです。シンプルな実装ですが、Slack プラットフォームの最新の機能をうまく活用しているので、これをベースに拡張することで実際に使えるアプリに進化させることができるでしょう。
 
-## The App We're Going to Build
+以下のアニメーションで、どのようなアプリなのかをみてみましょう。
 
-In this workshop, we're going to build a **helpdesk workflow app** from scratch. Building the app helps us learn how to start Slack App development and utilize the latest Slack Platform features.
+### ショートカットでモーダルを起動
 
-Here is the quick demo of the complete version of the helpdesk workflow:
+エンドユーザーは、Slack の最下部の入力ボックスからショットカットを起動し、モーダルウィンドウを開くことができます。
 
-<img src="https://user-images.githubusercontent.com/19658/90306649-611a4500-df0a-11ea-9f02-b05cc9e5ff52.gif" height=500>
+<img src="https://user-images.githubusercontent.com/19658/92388356-1f1fa000-f152-11ea-81da-b632428400ec.gif" height=500>
 
-When an end-user clicks a **shortcut** from the text composer (or the search bar), a **modal window** pops up.
+### 複数画面を行き来できるモーダル
 
-When the user selects a category from the select menu, **the modal immediately transforms itself** to show input fields for the chosen category. Also, **"Back" button** in the modal allows the user to go back to the initial step.
+エンドユーザーは、このモーダル上でまずカテゴリを選択します。ユーザーがカテゴリを選択すると、モーダルは即座に自分自身の表示状態を切り替えて、選択されたカテゴリに対応した入力フォームを表示します。「カテゴリ選択に戻る」ボタンを押すと、一つ前の画面に戻ることもできます。
 
-The app applies **custom input validation rules** for the title and due-date inputs.
+<img src="https://user-images.githubusercontent.com/19658/92388428-3a8aab00-f152-11ea-8f9d-389ed26facfd.gif" height=500>
 
-When the app receives a valid data submission from the user, the app **sends notifications** to the helpdesk team's channel, the DM with the submitter, and the DM with the approver (only for mobile device requests). In addition, the app updates **Home tab** for the submitter with the up-to-date list of the person's submissions.
+### カスタムの入力チェック
 
-## The Slack Platform Features
+このモーダルを送信すると、Slack の UI が標準で持っている必須入力チェックなどに加えて、サーバーサイドがカスタムの入力チェック処理を行います。ここでは件名の桁数と希望納品日が未来日かどうかのチェックをしています。
 
-We'll meet the above requirements by leveraging many of the latest Slack Platform features. We'll learn effective ways to take advantage of [Block Kit](https://api.slack.com/block-kit), [Global Shortcuts](https://api.slack.com/interactivity/shortcuts), and [Modals](https://api.slack.com/surfaces/modals).
+<img src="https://user-images.githubusercontent.com/19658/92388726-b97fe380-f152-11ea-9ff9-fc83213631d2.gif" height=500>
 
-* [Block Kit](https://api.slack.com/block-kit): Block Kit is the Slack's UI framework for building an rich user interface. From a Slack app developer perspective, it is just a kind of JSON data structure to comply with. Slack properly renders your specifically structured JSON for both desktop and mobile.
-* [Global Shortcuts](https://api.slack.com/interactivity/shortcuts): A Global Shortcut is a quick and easy way to start a workflow from anywhere in Slack. Users can access global shortcuts from either the menu in text composer or search bar. Try a built-in one to learn how it works.
-* [Modals](https://api.slack.com/surfaces/modals): A modal is a popover window built with Block Kit components. You use this for collecting user inputs or displaying information in an organized way. A modal can have multiple steps in its flow.
+### 通知を送信
 
-<img src="https://user-images.githubusercontent.com/19658/90348199-cf2c4c80-e06f-11ea-81a5-ad7be2ddcda3.gif" height=400>
+データ送信を受け付けたら、ヘルプデスクチームのチャンネルや関係者の DM にメッセージを送信することができます。
+
+<img src="https://user-images.githubusercontent.com/19658/92389121-72462280-f153-11ea-8579-0ad7fe56b934.gif" height=500>
+
+### ホームタブを更新
+
+また、ホームタブというユーザーごとにカスタムの情報を表示できるエリアに、このユーザーのこれまでの申請履歴を表示しています。
+
+<img src="https://user-images.githubusercontent.com/19658/92389194-9a358600-f153-11ea-80a5-b77fce2a85d7.gif" height=500>
+
+## 使われている Slack プラットフォームの機能
+
+このアプリは以下のような Slack プラットフォームの最新の機能を使って実装されています。
+
+* **[ブロックキット](https://api.slack.com/block-kit):** ブロックキットはリッチなユーザーインターフェースを実装するための Slack の UI フレームワークです。Slack アプリの開発者の視点で見るとブロックキットは予め決められた JSON のデータ構造です。アプリ側がこれに従うことで Slack がデスクトップ・モバイルに最適な形でレンダリングします。
+* **[ショートカット](https://api.slack.com/interactivity/shortcuts):** グローバルショートカットは Slack のどこからでも呼び出せる処理です。ユーザーは、最下部のメッセージ投稿 UI、または、最上部の検索メニューから呼び出すことができます。
+* **[モーダル](https://api.slack.com/surfaces/modals):** モーダルはブロックキットを使って構成するポップアップウィンドウです。ユーザーから入力内容を収集したり、情報を整理された形で表示したりするために利用されます。また、複数のステップの遷移を実装したり、複数モーダルを重ねたりすることもできます。
+* **[ホームタブ](https://api.slack.com/surfaces/tabs):** ユーザーごとに個別の情報を表示するためのエリアです。自分のタスクや予定を表示したり、ダッシュボードのようなものを表示するために利用されます。
 
 ## Bolt for JavaScript
 
-We're going to use [Bolt for JavaScript](https://slack.dev/bolt-js/), a Slack app framework optimized for taking full advantage of the Platform features. With Bolt, you won't be bothered by Slack-specific non-functional requirements:
+[Bolt for JavaScript](https://slack.dev/bolt-js/ja-jp/tutorial/getting-started) (ボルト) は、公式のフルスタックな Slack アプリ開発フレームワークです。全ての新しいプラットフォーム機能がサポートされており、また Slack アプリで必要となる非機能要件に予めフレームワーク側で対応しています：
 
-* Verify requests from Slack for security (Your API endpoint is exposed to the internet. That means not only Slack, but any random clients may try to send requests to your endpoint. So, it's highly recommended to distinguish Slack's requests from others.)
-* Parse a variety of payloads (For historical reasons, the data structure of payloads varies among features.)
-* Dispatch requests to their right code path (similarly to well-designed full-stack Web app frameworks)
-* Avoid infinite loop errors by reacting to events triggered by the app itself (particularly when using Events API)
-* Pick up the right access token for an incoming request
+* **Slack からのリクエストを検証:** Slack アプリのエンドポイントは公開された URL である必要があるため、受信したリクエストが本当に Slack からのリクエストかどうかを検証することはセキュリティのために重要です。Bolt を使うと Signing Secret の値を設定しておくだけで、この検証が自動的に有効になります。
+* **リクエストを適切に分岐:** Slack からのリクエストを適切なリスナー関数に実行させます。Web アプリフレームワークのルーティング機能のようなインターフェースで簡単にこの分岐を設定することができます。
+* **ペイロードの形式の差異を吸収:** 歴史的経緯から Slack API のペイロードの形式は機能によって若干異なりますが、Bolt はそれらを適切にパーズした上で、その内容をミドルウェアやリスナー関数に統一的な形式で引き渡します。
+* **無限ループに陥らないように予め制御:** イベント API を使っていると、ボットユーザー自身の発言に再度反応して無限ループしてしまうという失敗がありがちですが、Bolt を使っていると予めループしないよう制御してくれます。
+* **複数ワークスペース対応:** 開発用ワークスペース以外にもインストールできるアプリとして提供するために必要な OAuth フローの実装や、各リクエストごとに適切なトークンを選択するロジックを簡単に実装できる仕組みを提供しています。
 
-As Bolt takes care of these things, your Slack app development becomes even more productive.
+このように Bolt を使うことで、アプリの本質的なロジック以外の様々なことへの対応がシンプルになります。
 
-## All The Steps to Build This App
+## このアプリを実装するための全ステップ
 
-### Get the Project Template
-
-Access **git.io/apidays-slack**!
+### プロジェクトをセットアップする
 
 ```bash
-git clone git@github.com:seratch/apidays-workshop-2020.git
-cd apidays-workshop-2020/
-node --version # need to be v10.13 or higher
-npm i # install dependencies
-code . # Open the project with Visual Studio Code
+git clone git@github.com:seratch/bit-valley-2020-slack-bolt-app.git
+cd bit-valley-2020-slack-bolt-app/
+node --version # Node v10.13 かそれよりも新しいバージョンが必須です
+npm i # 依存パッケージをインストール
+code . # Visual Studio Code を使ってプロジェクトを開きます
 ```
 
-### Create a New Slack App
+### Slack アプリの設定を作る
 
-Visit https://api.slack.com/apps to create a new Slack App configuration.
+https://api.slack.com/apps にブラウザでアクセスして、新しい Slack アプリの設定をつくります。
 
-[Signing in](https://slack.com/signin) to the Slack workspace you're going to use for development in the browser is required.
+このブラウザで、[Slack ワークスペースにログインしているか確認し](https://slack.com/signin)、その上で先ほどの URL から Slack アプリを作ります。
 
-### Add Required Bot Token Scopes
+### 必要な Bot Token Scopes を設定
 
-Go to the **OAuth & Permissions** page and add the following **Bot Token Scopes** to the app.
+アプリを作ったら **OAuth & Permissions** というページに遷移し、**Bot Token Scopes** というセクションまでスクロールします。そして、以下の権限を追加してください。
 
-* [`commands`](https://api.slack.com/scopes/commands) for creating a Global Shortcut
-* [`chat:write`](https://api.slack.com/scopes/chat:write) for [`chat.postMessage`](https://api.slack.com/methods/chat.postMessage) API calls
-* [`chat:write.public`](https://api.slack.com/scopes/chat:write.public) for [`chat.postMessage`](https://api.slack.com/methods/chat.postMessage) API calls in public channels where the bot user is not yet invited
-* [`im:write`](https://api.slack.com/scopes/im:write) for [`conversations.open`](https://api.slack.com/methods/conversations.open) API calls
+* [`commands`](https://api.slack.com/scopes/commands) は、新しいショートカットの追加に必要です。
+* [`chat:write`](https://api.slack.com/scopes/chat:write) は [`chat.postMessage`](https://api.slack.com/methods/chat.postMessage) API というメッセージ投稿の API を使うために必要です。
+* [`chat:write.public`](https://api.slack.com/scopes/chat:write.public) は、任意のパブリックチャンネルにボットユーザーを招待することなく [`chat.postMessage`](https://api.slack.com/methods/chat.postMessage) API を実行するために必要です。
+* [`im:write`](https://api.slack.com/scopes/im:write) は [`conversations.open`](https://api.slack.com/methods/conversations.open) API という新しい DM を開始するための API を使うために必要です。
 
-### Give Your Bot User a Relevant Name
+### ボットユーザーに適切な名前をつける
 
-The Slack App's name automatically determines the default bot user name. If you prefer a different name over the name automatically set, go to **App Home** page and change it. As a bot user name is user-facing, making it nice is crucial for better user experiences.
+インストールする前に **App Home** ページで、ボットユーザーにわかりやすい名前をつけるとよいでしょう。 **Basic Information** の最下部でアプリのアイコンや説明をなどをカスタマイズすることもできます。
 
-### Install The App Onto Your Development Workspace
+### ホームタブ機能を有効にする
 
-As long as you use this app only in its development workspace, you don't need to implement [the standard OAuth flow](https://api.slack.com/authentication/oauth-v2) for acquiring OAuth access tokens. You can go with the simplified way offered by the Slack Platform. Go to the **Install App** page and just click the install button and complete the OAuth flow. You'll use the **Bot User OAuth Access Token** when booting your Bolt app.
+デフォルトではホームタブの機能は有効になっていないので、 **App Home** ページで有効にしておいてください。
 
-If you're interested in distributing your app to multiple workspaces, refer to [the Bolt JS's guide](https://slack.dev/bolt-js/concepts#authenticating-oauth).
+### アプリをワークスペースにインストールする
 
-### Run the Bolt App
+「Development Slack Workspace」で使用する限りにおいては、[OAuth フロー](https://api.slack.com/authentication/oauth-v2)を実装しなくても OAuth アクセストークンを発行して、アプリをそのワークスペースで有効化することができます。
 
-All the steps to follow for booting your Bolt app are:
+**Install App** ページから、インストールボタンをクリックし、OAuth フローを完了させてください。戻ってきた画面で **Bot User OAuth Access Token** として表されているアクセストークンをアプリ起動時に指定します。
 
-* Create `.env` file at the root directory of this project
-* Make sure if you're using Node.js 10.13 or higher (`node --version`)
-* Run `npm install` to fetch all required dependencies
-* Run `npm run local` to start the local app
-* Install ngrok if you don't have yet - https://ngrok.com/
-* Open another terminal and run `ngrok http 3000` to establish a public endpoint
+もし、複数ワークスペースにインストール可能なアプリを実装することに興味があれば、[Bolt for JavaScript のドキュメント](https://slack.dev/bolt-js/ja-jp/concepts#authenticating-oauth)を参考にしてみてください。
 
-#### Place .env and Save Your Credentails
+### Bolt アプリを立ち上げる
+
+ローカルで Bolt アプリを起動するには、以下のステップに従ってください：
+
+* プロジェクトのルートディレクトリに `.env` ファイルを作って、必要な情報を設定
+* Node.js 10.13 かそれより新しいバージョンを使っているか確認 (`node --version`)
+* `npm install` を実行して依存ライブラリをインストール
+* `npm run local` を実行して、アプリを起動
+* ngrok をインストールしていなければインストール - https://ngrok.com/
+* 別のターミナルで `ngrok http 3000` を実行して公開エンドポイントを立ち上げる
+
+#### .env を配置して Bot Token と Signing Secret を設定
 
 ```
 SLACK_BOT_TOKEN=xoxb-111-111-xxx
 SLACK_SIGNING_SECRET=xxx
 ```
 
-#### Run the Local App
-
-The procedure is actually quite simple. Run the following commands.
+#### ローカルアプリを起動
 
 ```bash
-node --version # should be v10.13.0 or higher
+node --version # v10.13.0 以上
 npm install
-npm run local # This starts an app at http://localhost:3000/slack/events
+npm run local # 起動すると http://localhost:3000/slack/events でリクエストを受け付けます
 ```
 
-#### Run ngrok for Forwarding Slack Requests To Your Local App
+#### ngrok を Slack からのリクエストをフォワードするために起動
 
-If you don't have [ngrok](https://ngrok.com/), download it.
+[ngrok](https://ngrok.com/) をまだインストールしていなければ、ウェブサイトからダウンロードして設定します。以下のステップで、適切に設定できたか確認します。
 
 ```bash
-# Check if the local app is running
-curl -I -XPOST http://localhost:3000/slack/events # You should get HTTP/1.1 401 Unauthorized
+# ローカルでアプリが立ち上がっていることを確認
+curl -I -XPOST http://localhost:3000/slack/events # HTTP/1.1 401 Unauthorized が返ってくるはず
 
-# on another terminal
+# 別のターミナルで実行
 ./ngrok http 3000
 
-# if you're a paid user
+# ngrok の有償プランを使っているなら以下のように固定のサブドメインを指定できます
 ./ngrok http 3000 --subdomain {whatever-you-want}
 
-# You can verify if it's working by the following on yet another terminal:
-curl -I -XPOST https://{your random subdomain here}.ngrok.io/slack/events # You should get HTTP/1.1 401 Unauthorized
+# 再度、公開エンドポイントからリクエストをして、同じように 401 が返ってくるか確認
+curl -I -XPOST https://{your random subdomain here}.ngrok.io/slack/events # HTTP/1.1 401 Unauthorized が返ってくれば OK
 ```
 
-### Set Request URL and add a Global Shortcut
+### Request URL を設定して、ショートカットを追加
 
-* Visit the Slack App configuration page (https://api.slack.comc/apps) and choose your app
-* Go to the **Interactivity & Shortcuts** page
-* Turn on the Interactivity feature
-* Set `https://{your random subdomain here}.ngrok.io/slack/events` as the Request URL
-* Create a new Shortcut (Global -> Callback ID: `new-helpdesk-request`)
-* Click the **Save Changes** button at the bottom
+* https://api.slack.comc/apps にアクセスしてアプリを選択
+* **Interactivity & Shortcuts** ページへ移動
+* Interactivy 機能が無効になっているのを有効にする
+* `https://{your random subdomain here}.ngrok.io/slack/events` を Request URL として設定
+* Global のショートカットを Callback ID: `new-helpdesk-request` で作成
+* 最下部の **Save Changes** ボタンを押すのを忘れずに
 
-### Implement Listeners in Your Bolt App
+### リスナー関数を実装する
 
-Check the [./src/solution.js](./src/solution.js) to know the complete version of the app.
+このアプリでは以下のリスナー関数を実装しています。
 
-* Add a [Global Shortcut listener](https://slack.dev/bolt-js/concepts#shortcuts) for callback_id: `new-helpdesk-request`
-* Add an [Action listener](https://slack.dev/bolt-js/concepts#action-listening) for action_id: `helpdesk-request-modal-category-selection`
-* Add an [Action listener](https://slack.dev/bolt-js/concepts#action-listening) for action_id: `helpdesk-request-modal-reset`
-* Add a [View Submission listener](https://slack.dev/bolt-js/concepts#view_submissions) for callback_id: `helpdesk-request-modal`
+* [グローバルショートカットのリスナー関数](https://slack.dev/bolt-js/ja-jp/concepts#shortcuts) を `new-helpdesk-request` という Callback ID に反応するよう設定
+* [セレクトメニューでの選択に対するリスナー関数](https://slack.dev/bolt-js/ja-jp/concepts#action-listening) を `helpdesk-request-modal-category-selection` という Action ID に反応するよう設定
+* [「カテゴリ選択へ戻る」ボタンクリックに対するリスナー関数](https://slack.dev/bolt-js/ja-jp/concepts#action-listening) を `helpdesk-request-modal-reset` という Action ID に反応するよう設定
+* [モーダル送信に対するリスナー関数](https://slack.dev/bolt-js/ja-jp/concepts#view_submissions) を `helpdesk-request-modal` という Callback ID に反応するよう設定
 
-#### Tip: Block Kit Preview Tool
+#### 小技: Block Kit のプレビューツール
 
-[Block Kit Builder](https://api.slack.com/block-kit-builder) is a preview tool in the browser to see how your `blocks` look like in Slack. I recommend checking the validity and the appearance of your `blocks` using this tool before embedding them into your app.
+[ブロックキットビルダー](https://api.slack.com/block-kit-builder) というブラウザから使えるブロックキットのプレビューツールがあります。実際にアプリに `blocks` を組み込む前に、このツールを使って表示を調整すると効率的に UI を改善できるでしょう。
 
-* [Step 1 modal in Block Kit Builder](https://app.slack.com/block-kit-builder#%7B%22type%22:%22modal%22,%22callback_id%22:%22helpdesk-request-modal%22,%22title%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Helpdesk%20Request%22%7D,%22close%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Close%22%7D,%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22:wave:%20Select%20a%20category.%22%7D%7D,%7B%22type%22:%22actions%22,%22elements%22:%5B%7B%22type%22:%22static_select%22,%22action_id%22:%22helpdesk-request-modal-category-selection%22,%22options%22:%5B%7B%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Laptop%22%7D,%22value%22:%22laptop%22%7D,%7B%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Mobile%22%7D,%22value%22:%22mobile%22%7D,%7B%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Other%22%7D,%22value%22:%22other%22%7D%5D%7D%5D%7D%5D%7D)
-* [Step 2 modal in Block Kit Builder](https://app.slack.com/block-kit-builder#%7B%22type%22:%22modal%22,%22callback_id%22:%22helpdesk-request-modal%22,%22private_metadata%22:%22%7B%5C%22category%5C%22:%5C%22mobile%5C%22%7D%22,%22title%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Helpdesk%20Request%22%7D,%22submit%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Submit%22%7D,%22close%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Close%22%7D,%22blocks%22:%5B%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22mrkdwn%22,%22text%22:%22You're%20making%20a%20request%20on%20your%20mobile%20devices.%22%7D,%22accessory%22:%7B%22type%22:%22button%22,%22action_id%22:%22helpdesk-request-modal-reset%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Back%22%7D,%22value%22:%221%22%7D%7D,%7B%22type%22:%22input%22,%22block_id%22:%22title%22,%22label%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Title%22%7D,%22element%22:%7B%22type%22:%22plain_text_input%22,%22action_id%22:%22element%22,%22initial_value%22:%22Mobile%20Device%20Replacement%22%7D%7D,%7B%22type%22:%22input%22,%22block_id%22:%22os%22,%22label%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Mobile%20OS%22%7D,%22element%22:%7B%22type%22:%22static_select%22,%22action_id%22:%22element%22,%22placeholder%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Select%20an%20item%22%7D,%22options%22:%5B%7B%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22iOS%22%7D,%22value%22:%22ios%22%7D,%7B%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Android%22%7D,%22value%22:%22android%22%7D%5D%7D%7D,%7B%22type%22:%22input%22,%22block_id%22:%22approver%22,%22label%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Approver%22%7D,%22element%22:%7B%22type%22:%22users_select%22,%22action_id%22:%22element%22,%22placeholder%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Select%20your%20approver%22%7D%7D%7D,%7B%22type%22:%22input%22,%22block_id%22:%22due-date%22,%22element%22:%7B%22type%22:%22datepicker%22,%22action_id%22:%22element%22%7D,%22label%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Due%20date%22,%22emoji%22:true%7D%7D%5D%7D)
+* [カテゴリ選択画面のモーダル](https://app.slack.com/block-kit-builder#%7B"type":"modal","callback_id":"helpdesk-request-modal","title":%7B"type":"plain_text","text":"ヘルプデスク申請"%7D,"close":%7B"type":"plain_text","text":"閉じる"%7D,"blocks":%5B%7B"type":"section","text":%7B"type":"mrkdwn","text":":wave:%20申請カテゴリを選んでください。"%7D%7D,%7B"type":"actions","elements":%5B%7B"type":"static_select","action_id":"helpdesk-request-modal-category-selection","options":%5B%7B"text":%7B"type":"plain_text","text":"PC"%7D,"value":"laptop"%7D,%7B"text":%7B"type":"plain_text","text":"モバイル端末"%7D,"value":"mobile"%7D,%7B"text":%7B"type":"plain_text","text":"その他"%7D,"value":"other"%7D%5D%7D%5D%7D%5D%7D)
+* [申請内容の入力画面のモーダル](https://app.slack.com/block-kit-builder#%7B"type":"modal","callback_id":"helpdesk-request-modal","private_metadata":"%7B%5C"category%5C":%5C"mobile%5C"%7D","title":%7B"type":"plain_text","text":"ヘルプデスク申請"%7D,"submit":%7B"type":"plain_text","text":"送信"%7D,"close":%7B"type":"plain_text","text":"閉じる"%7D,"blocks":%5B%7B"type":"section","text":%7B"type":"mrkdwn","text":"モバイル端末に関する申請画面です。"%7D,"accessory":%7B"type":"button","action_id":"helpdesk-request-modal-reset","text":%7B"type":"plain_text","text":"カテゴリ選択に戻る"%7D,"value":"1"%7D%7D,%7B"type":"input","block_id":"title","label":%7B"type":"plain_text","text":"件名"%7D,"element":%7B"type":"plain_text_input","action_id":"element","initial_value":"モバイル端末の交換申請"%7D%7D,%7B"type":"input","block_id":"os","label":%7B"type":"plain_text","text":"モバイル端末の%20OS"%7D,"element":%7B"type":"static_select","action_id":"element","placeholder":%7B"type":"plain_text","text":"選択してください"%7D,"options":%5B%7B"text":%7B"type":"plain_text","text":"iOS"%7D,"value":"ios"%7D,%7B"text":%7B"type":"plain_text","text":"Android"%7D,"value":"android"%7D%5D%7D%7D,%7B"type":"input","block_id":"approver","label":%7B"type":"plain_text","text":"承認者"%7D,"element":%7B"type":"users_select","action_id":"element","placeholder":%7B"type":"plain_text","text":"承認者を選択してください（通常は直属の上司です）"%7D%7D%7D,%7B"type":"input","block_id":"due-date","element":%7B"type":"datepicker","action_id":"element"%7D,"label":%7B"type":"plain_text","text":"希望納品日（ご要望に添えない場合があります）","emoji":true%7D%7D%5D%7D)
 
-## Recap
+## まとめ
 
-* Create a Slack app configuration at https://api.slack.com/apps
-  * Signing in with your Slack workspace account is required
-* Configure the Slack app with sufficient permissions
-  * Go to the "OAuth & Permissions" page and add bot token scopes
-  * Turn the features you use on (Interactivity, Events Subscriptions, Home tab, and so on)
-* Install the app onto its Development Slack Workspace
-  * Grab the "Bot User OAuth Access Token" starting with "xox**b**-"
-* Create a Bolt app
-  * Set env variables - `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`
-  * Start the app (`app.start()`)
-  * By default, Bolt apps receive requests coming to `POST http://localhost:3000/slack/events`
-* Have a public endpoint to receive requests from Slack
-  * You may use ngrok or similar for it (`ngrok http 3000`)
-* Add listeners for incoming requests
-  * Check ngrok access logs (`http://localhost:4040`)
-  * Check the error messages in stdout
-  * Read [the Bolt for JS documents](https://slack.dev/bolt-js)
-* Have fun with Slack app development 
+* https://api.slack.com/apps から Slack アプリの設定を行います
+  * そのブラウザで Slack ワークスペースにログインしている必要があります
+* 必要な権限を設定する
+  * "OAuth & Permissions" ページで Bot Token Scopes を設定します
+  * Interactivity, Events Subscriptions, Home tab のような機能を有効にします
+* Development Slack Workspace にアプリをインストールします
+  * "Bot User OAuth Access Token" を取得します
+* Bolt アプリをローカルで作成します
+  * `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET` という環境変数、または .env ファイルを設定します
+  * `app.start()` で Web サーバープロセスを起動します
+  * デフォルトでは `POST http://localhost:3000/slack/events` で全てのリクエストを受けます
+* 公開されたエンドポイントを設定して、Slack からのリクエストを受け付けられるようにします
+  * ngrok かその他類似のソリューションを使います
+* 必要なリスナー関数を実装します
+  * ngrok を使っているなら `http://localhost:4040` を確認すると捗るでしょう
+  * 標準出力にエラーメッセージが出ていることもあります
+  * Bolt for JS のドキュメントは全て[日本語化されています](https://slack.dev/bolt-js/ja-jp/)
+* Slack アプリ開発を楽しんでください！
 
-# License
+# ライセンス
 
 The MIT License
+
+自由に fork して、カスタマイズ・再利用してください！

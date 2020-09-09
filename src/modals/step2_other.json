@@ -1,0 +1,61 @@
+{
+  "type": "modal",
+  "callback_id": "helpdesk-request-modal",
+  "private_metadata": "{\"category\":\"other\"}",
+  "title": {
+    "type": "plain_text",
+    "text": "ヘルプデスク申請"
+  },
+  "submit": {
+    "type": "plain_text",
+    "text": "送信"
+  },
+  "close": {
+    "type": "plain_text",
+    "text": "閉じる"
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "できるだけ詳細な情報を添えて送信いただくようご協力をお願いします。"
+      },
+      "accessory": {
+        "type": "button",
+        "action_id": "helpdesk-request-modal-reset",
+        "text": {
+          "type": "plain_text",
+          "text": "カテゴリ選択に戻る"
+        },
+        "value": "1"
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "title",
+      "label": {
+        "type": "plain_text",
+        "text": "件名"
+      },
+      "element": {
+        "type": "plain_text_input",
+        "action_id": "element",
+        "initial_value": ""
+      }
+    },
+    {
+      "type": "input",
+      "block_id": "description",
+      "label": {
+        "type": "plain_text",
+        "text": "概要"
+      },
+      "element": {
+        "type": "plain_text_input",
+        "action_id": "element",
+        "multiline": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "type": "modal",
+  "callback_id": "helpdesk-request-modal",
+  "title": {
+    "type": "plain_text",
+    "text": "ヘルプデスク申請"
+  },
+  "close": {
+    "type": "plain_text",
+    "text": "閉じる"
+  },
+  "blocks": [
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": ":wave: 申請カテゴリを選んでください。"
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "static_select",
+          "action_id": "helpdesk-request-modal-category-selection",
+          "options": [
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "PC"
+              },
+              "value": "laptop"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "モバイル端末"
+              },
+              "value": "mobile"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "その他"
+              },
+              "value": "other"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
