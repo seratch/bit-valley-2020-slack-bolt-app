@@ -278,7 +278,7 @@ def accept_view_submission(ack: Ack, body: dict, logger: logging.Logger):
         errors["due-date"] = "希望納品日は明日以降を指定してください"
 
     if len(errors) > 0:
-        ack({"response_action": "errors", "errors": errors})
+        ack(response_action="errors", errors=errors)
         return
 
     ack()
