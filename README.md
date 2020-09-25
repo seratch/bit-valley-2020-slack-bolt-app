@@ -177,7 +177,7 @@ curl -I -XPOST https://{your random subdomain here}.ngrok.io/slack/events # HTTP
   * そのブラウザで Slack ワークスペースにログインしている必要があります
 * 必要な権限を設定する
   * "OAuth & Permissions" ページで Bot Token Scopes を設定します
-  * Interactivity, Events Subscriptions, Home tab のような機能を有効にします
+  * Interactivity, Events Subscriptions, Home tab 等の機能を有効にします
 * Development Slack Workspace にアプリをインストールします
   * "Bot User OAuth Access Token" を取得します
 * Bolt アプリをローカルで作成します
@@ -189,7 +189,7 @@ curl -I -XPOST https://{your random subdomain here}.ngrok.io/slack/events # HTTP
 * 必要なリスナー関数を実装します
   * ngrok を使っているなら `http://localhost:4040` を確認すると捗るでしょう
   * 標準出力にエラーメッセージが出ていることもあります
-  * Bolt for JS のドキュメントは全て[日本語化されています](https://slack.dev/bolt-js/ja-jp/)
+  * Bolt for JS のドキュメントは全て[日本語化されています](https://slack.dev/bolt-js/ja-jp/tutorial/getting-started)
 * Slack アプリ開発を楽しんでください！
 
 # ライセンス
