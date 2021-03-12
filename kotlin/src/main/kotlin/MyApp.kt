@@ -3,8 +3,6 @@ import com.slack.api.bolt.jetty.SlackAppServer
 import com.slack.api.model.kotlin_extension.view.blocks
 import com.slack.api.model.view.Views.*
 import com.slack.api.model.view.View
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -13,29 +11,23 @@ fun main() {
   val app = App()
 
   app.globalShortcut("new-helpdesk-request") { req, ctx ->
-    GlobalScope.async {
-      ctx.client().viewsOpen { it.triggerId(req.payload.triggerId).view(step1Modal) }
-    }
+    ctx.asyncClient().viewsOpen { it.triggerId(req.payload.triggerId).view(step1Modal) }
     ctx.ack()
   }
   app.blockAction("helpdesk-request-modal-category-selection") { req, ctx ->
-    GlobalScope.async {
-      val view: View = when (req.payload.actions[0].selectedOption.value) {
-        "laptop" -> step2LaptopModal
-        "mobile" -> step2MobileModal
-        else -> step2OtherModal
-      }
-      ctx.client().viewsUpdate {
-        it.viewId(req.payload.view.id).hash(req.payload.view.hash).view(view)
-      }
+    val view: View = when (req.payload.actions[0].selectedOption.value) {
+      "laptop" -> step2LaptopModal
+      "mobile" -> step2MobileModal
+      else -> step2OtherModal
+    }
+    ctx.asyncClient().viewsUpdate {
+      it.viewId(req.payload.view.id).hash(req.payload.view.hash).view(view)
     }
     ctx.ack()
   }
   app.blockAction("helpdesk-request-modal-reset") { req, ctx ->
-    GlobalScope.async {
-      ctx.client().viewsUpdate {
-        it.viewId(req.payload.view.id).hash(req.payload.view.hash).view(step1Modal)
-      }
+    ctx.asyncClient().viewsUpdate {
+      it.viewId(req.payload.view.id).hash(req.payload.view.hash).view(step1Modal)
     }
     ctx.ack()
   }
