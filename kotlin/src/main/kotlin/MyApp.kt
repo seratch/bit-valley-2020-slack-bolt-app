@@ -48,6 +48,12 @@ fun main() {
     if (dueDate != null && LocalDate.parse(dueDate, formatter) <= LocalDate.now()) {
       errors["due-date"] = "希望納品日は明日以降を指定してください"
     }
+    if (approver != null) {
+      val user = ctx.client().usersInfo { it.user(approver) }.user
+      if (user != null && (user.isAppUser || user.isBot || user.isStranger)) {
+        errors["approver"] = "このユーザーは承認者に指定できません"
+      }
+    }
     if (errors.isNotEmpty()) {
       ctx.ack { it.responseAction("errors").errors(errors) }
     } else {

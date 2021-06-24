@@ -29,6 +29,7 @@ const { App } = require("@slack/bolt");
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   token: process.env.SLACK_BOT_TOKEN,
+  logLevel: 'debug',
 });
 enableReqeustLogger(app);
 
@@ -177,8 +178,26 @@ app.view("helpdesk-request-modal", async ({ logger, client, body, ack }) => {
   if (typeof dueDate !== "undefined" && new Date(dueDate) < new Date()) {
     errors["due-date"] = "希望納品日は明日以降を指定してください";
   }
+  if (typeof approver !== "undefined") {
+    // In the case of Slack Conenct external user,
+    let isValidApprover = true;
+    try {
+      const userInfo = await client.users.info({user: approver});
+      const user = userInfo.user;
+      logger.debug(`Approver user info: ${JSON.stringify(user)}`);
+      if (user.is_app_user || user.is_owner || user.is_stranger) {
+        isValidApprover = false;
+      }
+    } catch (e) {
+      logger.info(e);
+      isValidApprover = false;
+    }
+    if (!isValidApprover) {
+      errors["approver"] = "このユーザーは承認者に指定できません";
+    }
+  }
   if (Object.entries(errors).length > 0) {
-    // モーダル内に対応するエラ〜メッセージを表示します
+    // モーダル内に対応するエラーメッセージを表示します
     await ack({
       response_action: 'errors',
       errors: errors

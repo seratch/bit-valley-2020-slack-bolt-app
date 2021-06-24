@@ -1,1 +1,1 @@
-slack_bolt>=1.4.3,<2
+slack_bolt>=1.6,<2

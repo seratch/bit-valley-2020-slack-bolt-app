@@ -170,7 +170,6 @@ step2_mobile_modal = {
             "label": {
                 "type": "plain_text",
                 "text": "希望納品日（ご要望に添えない場合があります）",
-                "emoji": True,
             },
         },
     ],
@@ -248,7 +247,9 @@ def show_modal_step1_again(ack: Ack, body: dict, client: WebClient):
 
 
 @app.view("helpdesk-request-modal")
-def accept_view_submission(ack: Ack, body: dict, logger: logging.Logger):
+def accept_view_submission(
+    ack: Ack, body: dict, logger: logging.Logger, client: WebClient
+):
     values = body["view"]["state"]["values"]
     actionId = "element"
     title = values["title"][actionId]["value"] if "title" in values else None
@@ -271,6 +272,20 @@ def accept_view_submission(ack: Ack, body: dict, logger: logging.Logger):
     errors = {}
     if title is not None and len(title) <= 5:
         errors["title"] = "件名は 6 文字以上で入力してください"
+    if approver is not None:
+        is_valid_approver = True
+        try:
+            user_info = client.users_info(user=approver)
+            user = user_info["user"]
+            is_valid_approver = not (
+                user.get("is_app_user", False)
+                or user.get("is_bot", False)
+                or user.get("is_stranger", False)
+            )
+        except:
+            is_valid_approver = False
+        if not is_valid_approver:
+            errors["approver"] = "このユーザーは承認者に指定できません"
     if (
         due_date is not None
         and datetime.strptime(due_date, "%Y-%m-%d") <= datetime.today()
